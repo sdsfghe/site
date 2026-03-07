@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Roblox Oyunu</title>
+<style>
+body {
+  background-color: #0f172a;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 100px;
+}
 
+p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+/* Neon ışıklı buton stili */
+a.button {
+  position: relative;
+  display: inline-block;
+  padding: 20px 50px;
+  font-size: 22px;
+  color: #fff;
+  background: #22c55e;
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow:
+    0 0 5px #22c55e,
+    0 0 10px #22c55e,
+    0 0 20px #22c55e,
+    0 0 40px #16a34a,
+    0 0 80px #16a34a;
+  animation: neonGlow 2.5s ease-in-out infinite alternate;
+}
+
+a.button:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 10px #39ff14,
+    0 0 20px #39ff14,
+    0 0 40px #39ff14,
+    0 0 80px #39ff14,
+    0 0 90px #39ff14;
+}
+
+/* Neon ışık animasyonu */
+@keyframes neonGlow {
+  0% {
+    box-shadow:
+      0 0 5px #22c55e,
+      0 0 10px #22c55e,
+      0 0 20px #22c55e,
+      0 0 40px #16a34a,
+      0 0 80px #16a34a;
+  }
+  100% {
+    box-shadow:
+      0 0 10px #4ade80,
+      0 0 20px #4ade80,
+      0 0 30px #4ade80,
+      0 0 60px #22c55e,
+      0 0 100px #22c55e;
+  }
+}
+</style>
+</head>
+<body>
+
+<p>Aşağıdaki butona bas ve hemen oyuna gel 👇</p>
+
+<a href="https://www.robiox.com.gr/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=39758983505557093406275541722251" class="button">JOIN</a>
+
+</body>
+</html>
