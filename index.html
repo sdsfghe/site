@@ -1,79 +1,190 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="tr">
 <head>
-<title>Roblox Oyunu</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRUTHX Roblox</title>
+
 <style>
-body {
-  background-color: #0f172a;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin-top: 100px;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
 }
 
-p {
-  font-size: 18px;
-  margin-bottom: 30px;
+body{
+background: radial-gradient(circle at top,#1e293b,#020617);
+color:white;
+text-align:center;
 }
 
-/* Neon ışıklı buton stili */
-a.button {
-  position: relative;
-  display: inline-block;
-  padding: 20px 50px;
-  font-size: 22px;
-  color: #fff;
-  background: #22c55e;
-  border-radius: 12px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow:
-    0 0 5px #22c55e,
-    0 0 10px #22c55e,
-    0 0 20px #22c55e,
-    0 0 40px #16a34a,
-    0 0 80px #16a34a;
-  animation: neonGlow 2.5s ease-in-out infinite alternate;
+/* üst bar */
+
+header{
+padding:30px;
+font-size:32px;
+font-weight:bold;
+letter-spacing:3px;
+background:rgba(0,0,0,0.3);
+backdrop-filter: blur(10px);
+box-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
-a.button:hover {
-  transform: scale(1.05);
-  box-shadow:
-    0 0 10px #39ff14,
-    0 0 20px #39ff14,
-    0 0 40px #39ff14,
-    0 0 80px #39ff14,
-    0 0 90px #39ff14;
+/* logo */
+
+.logo{
+margin-top:60px;
 }
 
-/* Neon ışık animasyonu */
-@keyframes neonGlow {
-  0% {
-    box-shadow:
-      0 0 5px #22c55e,
-      0 0 10px #22c55e,
-      0 0 20px #22c55e,
-      0 0 40px #16a34a,
-      0 0 80px #16a34a;
-  }
-  100% {
-    box-shadow:
-      0 0 10px #4ade80,
-      0 0 20px #4ade80,
-      0 0 30px #4ade80,
-      0 0 60px #22c55e,
-      0 0 100px #22c55e;
-  }
+.logo img{
+width:140px;
+border-radius:20px;
+box-shadow:0 0 30px #ff6a00;
 }
+
+/* başlık */
+
+h1{
+margin-top:20px;
+font-size:48px;
+background:linear-gradient(90deg,#ff6a00,#ff2d55);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* açıklama */
+
+p{
+margin-top:20px;
+font-size:20px;
+opacity:0.8;
+}
+
+/* neon buton */
+
+.button{
+display:inline-block;
+margin-top:40px;
+padding:20px 60px;
+font-size:24px;
+border-radius:14px;
+text-decoration:none;
+color:white;
+background:#22c55e;
+
+box-shadow:
+0 0 10px #22c55e,
+0 0 20px #22c55e,
+0 0 40px #16a34a,
+0 0 80px #16a34a;
+
+transition:0.3s;
+animation:glow 2.5s infinite alternate;
+}
+
+.button:hover{
+transform:scale(1.1);
+
+box-shadow:
+0 0 20px #39ff14,
+0 0 40px #39ff14,
+0 0 80px #39ff14,
+0 0 120px #39ff14;
+}
+
+@keyframes glow{
+from{
+box-shadow:
+0 0 10px #22c55e,
+0 0 20px #22c55e,
+0 0 40px #16a34a;
+}
+
+to{
+box-shadow:
+0 0 20px #4ade80,
+0 0 40px #4ade80,
+0 0 80px #22c55e;
+}
+}
+
+/* kartlar */
+
+.cards{
+margin-top:100px;
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.card{
+background:#0f172a;
+padding:30px;
+width:220px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,0,0,0.6);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 20px #ff6a00;
+}
+
+footer{
+margin-top:100px;
+padding:30px;
+opacity:0.6;
+}
+
 </style>
+
 </head>
+
 <body>
 
-<p>Aşağıdaki butona bas ve hemen oyuna gel 👇</p>
+<header>
+SRUTHX COMMUNITY
+</header>
 
-<a href="https://www.robiox.com.gr/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=39758983505557093406275541722251" class="button">JOIN</a>
+<div class="logo">
+<img src="logo.png">
+</div>
+
+<h1>SRUTHX Roblox Sunucusu</h1>
+
+<p>Aşağıdaki butona bas ve hemen oyuna katıl 👇</p>
+
+<a href="https://www.robiox.com.gr/games/109983668079237/Steal-a-Brainrot?privateServerLinkCode=39758983505557093406275541722251" class="button">
+JOIN GAME
+</a>
+
+<div class="cards">
+
+<div class="card">
+<h3>🎮 Roblox</h3>
+<p>Sunucumuzda Roblox oyunları oynanır.</p>
+</div>
+
+<div class="card">
+<h3>💬 Discord</h3>
+<p>SRUTHX topluluğuna katıl.</p>
+</div>
+
+<div class="card">
+<h3>🔥 Aktif</h3>
+<p>Her gün aktif oyuncular.</p>
+</div>
+
+</div>
+
+<footer>
+© SRUTHX Community
+</footer>
 
 </body>
-
 </html>
