@@ -32,22 +32,6 @@ animation:bgmove 12s infinite linear;
 100%{background-position:0% 50%;}
 }
 
-/* HEADER */
-
-header{
-padding:30px;
-font-size:34px;
-font-weight:bold;
-letter-spacing:4px;
-
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(15px);
-
-box-shadow:0 0 25px rgba(255,106,0,0.5);
-}
-
-/* TITLE */
-
 h1{
 margin-top:30px;
 font-size:55px;
@@ -72,16 +56,11 @@ font-size:20px;
 opacity:0.9;
 }
 
-/* BUTTON */
-
 .button{
-
 display:inline-block;
 margin-top:25px;
 padding:12px 30px;
-
 font-size:18px;
-
 border-radius:14px;
 text-decoration:none;
 color:white;
@@ -99,7 +78,6 @@ animation:glow 2s infinite alternate;
 }
 
 .button:hover{
-
 transform:scale(1.15) rotate(-1deg);
 
 box-shadow:
@@ -110,45 +88,28 @@ box-shadow:
 }
 
 @keyframes glow{
-
-from{
-box-shadow:0 0 10px #22c55e,0 0 20px #16a34a;
+from{box-shadow:0 0 10px #22c55e,0 0 20px #16a34a;}
+to{box-shadow:0 0 30px #4ade80,0 0 70px #22c55e;}
 }
-
-to{
-box-shadow:0 0 30px #4ade80,0 0 70px #22c55e;
-}
-
-}
-
-/* CARDS */
 
 .cards{
-
 margin-top:60px;
-
 display:flex;
 justify-content:center;
 gap:35px;
-
 flex-wrap:wrap;
 }
 
-/* CARD */
-
 .card{
-
 background:rgba(15,23,42,0.6);
 backdrop-filter:blur(15px);
 
 padding:35px;
-
 width:230px;
 
 border-radius:20px;
 
-box-shadow:
-0 0 20px rgba(0,0,0,0.6);
+box-shadow:0 0 20px rgba(0,0,0,0.6);
 
 transition:0.4s;
 
@@ -156,7 +117,6 @@ animation:float 4s ease-in-out infinite;
 }
 
 .card:hover{
-
 transform:translateY(-15px) scale(1.05);
 
 box-shadow:
@@ -174,33 +134,13 @@ font-size:16px;
 opacity:0.85;
 }
 
-/* FLOAT ANIMATION */
-
 @keyframes float{
-
 0%{transform:translateY(0px)}
 50%{transform:translateY(-10px)}
 100%{transform:translateY(0px)}
-
-}
-
-/* FOOTER */
-
-footer{
-
-margin-top:70px;
-padding:30px;
-
-opacity:0.7;
-font-size:14px;
-
-background:rgba(0,0,0,0.3);
-backdrop-filter:blur(10px);
-
 }
 
 </style>
-
 </head>
 
 <body>
@@ -236,8 +176,6 @@ JOIN DISCORD
 </div>
 
 </div>
-
-<footer></footer>
 
 </body>
 </html>
