@@ -6,179 +6,58 @@
 <title>SRUTHX Roblox</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-color:white;
-text-align:center;
-min-height:100vh;
-
-/* YUMUŞAK VE SAKİN ARKA PLAN */
-background:
-radial-gradient(circle at top,#1e293b,#020617),
-linear-gradient(120deg,#ff7a18,#ff4d6d,#7c3aed);
-
-background-size:200% 200%;
-animation:bgmove 25s infinite linear; /* daha yavaş animasyon */
-}
-
-@keyframes bgmove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* BAŞLIK: RAINBOW */
-h1{
-margin-top:30px;
-font-size:55px;
-
-/* Rainbow gradient */
-background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-background-size: 400%;
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-animation: rainbow 6s linear infinite;
-}
-
-@keyframes rainbow{
-0%{background-position:0%;}
-50%{background-position:100%;}
-100%{background-position:0%;}
-}
-
-p{
-margin-top:20px;
-font-size:20px;
-opacity:0.9;
-}
-
-.button{
-display:inline-block;
-margin-top:25px;
-padding:12px 30px;
-font-size:18px;
-border-radius:14px;
-text-decoration:none;
-color:white;
-
-background:linear-gradient(45deg,#22c55e,#4ade80);
-
-box-shadow:
-0 0 10px #22c55e,
-0 0 25px #22c55e,
-0 0 50px #16a34a;
-
-transition:0.35s;
-
-animation:glow 2s infinite alternate;
-}
-
-.button:hover{
-transform:scale(1.15) rotate(-1deg);
-
-box-shadow:
-0 0 20px #39ff14,
-0 0 40px #39ff14,
-0 0 80px #39ff14,
-0 0 120px #39ff14;
-}
-
-@keyframes glow{
-from{box-shadow:0 0 10px #22c55e,0 0 20px #16a34a;}
-to{box-shadow:0 0 30px #4ade80,0 0 70px #22c55e;}
-}
-
-.cards{
-margin-top:60px;
-display:flex;
-justify-content:center;
-gap:35px;
-flex-wrap:wrap;
-}
-
-.card{
-background:rgba(15,23,42,0.6);
-backdrop-filter:blur(15px);
-
-padding:35px;
-width:230px;
-
-border-radius:20px;
-
-box-shadow:0 0 20px rgba(0,0,0,0.6);
-
-transition:0.4s;
-
-animation:float 4s ease-in-out infinite;
-}
-
-.card:hover{
-transform:translateY(-15px) scale(1.05);
-
-box-shadow:
-0 0 25px #ff6a00,
-0 0 60px rgba(255,106,0,0.6);
-}
-
-.card h3{
-margin-bottom:10px;
-font-size:22px;
-}
-
-.card p{
-font-size:16px;
-opacity:0.85;
-}
-
-@keyframes float{
-0%{transform:translateY(0px)}
-50%{transform:translateY(-10px)}
-100%{transform:translateY(0px)}
-}
-
+*{margin:0; padding:0; box-sizing:border-box; font-family:Arial;}
+body{background: radial-gradient(circle at top,#1e293b,#020617); color:white; text-align:center;}
+header{padding:30px; font-size:32px; font-weight:bold; letter-spacing:3px; background:rgba(0,0,0,0.3); backdrop-filter: blur(10px); box-shadow:0 0 20px rgba(0,0,0,0.5);}
+.logo{margin-top:60px;}
+.logo img{width:140px; border-radius:20px; box-shadow:0 0 30px #ff6a00;}
+h1{margin-top:20px; font-size:48px; background:linear-gradient(90deg,#ff6a00,#ff2d55); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+p{margin-top:20px; font-size:20px; opacity:0.8;}
+.button{display:inline-block; margin-top:20px; padding:15px 50px; font-size:20px; border-radius:14px; text-decoration:none; color:white; background:#22c55e; box-shadow:0 0 10px #22c55e,0 0 20px #22c55e,0 0 40px #16a34a,0 0 80px #16a34a; transition:0.3s; animation:glow 2.5s infinite alternate;}
+.button:hover{transform:scale(1.1); box-shadow:0 0 20px #39ff14,0 0 40px #39ff14,0 0 80px #39ff14,0 0 120px #39ff14;}
+@keyframes glow{from{box-shadow:0 0 10px #22c55e,0 0 20px #22c55e,0 0 40px #16a34a;} to{box-shadow:0 0 20px #4ade80,0 0 40px #4ade80,0 0 80px #22c55e;}}
+.cards{margin-top:50px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;}
+.card{background:#0f172a; padding:30px; width:220px; border-radius:15px; box-shadow:0 0 15px rgba(0,0,0,0.6); transition:0.3s;}
+.card:hover{transform:translateY(-10px); box-shadow:0 0 20px #ff6a00;}
+footer{margin-top:50px; padding:30px; opacity:0.6;}
 </style>
-</head>
 
+</head>
 <body>
+
+<header>SRUTHX COMMUNITY</header>
+
+<div class="logo">
+<img src="logo.png" alt="SRUTHX Logo">
+</div>
 
 <h1>SRUTHX Roblox Sunucusu</h1>
 
 <p>Aşağıdaki butona bas ve hemen oyuna katıl 👇</p>
 
-<a href="https://www.roblox.re/games/8737602449/PLS-DONATE?privateServerLinkCode=02656158406728114785427307943222" class="button">
-JOIN GAME
-</a>
+<!-- 🔥 PRIVATE SERVER LINK GÜNCELLENDİ -->
+<a href="https://www.roblox.re/games/8737602449/PLS-DONATE?privateServerLinkCode=02656158406728114785427307943222" class="button">JOIN GAME</a>
 
+<!-- Hakkında Bölümü -->
 <div class="cards">
+  <div class="card">
+    <h3>ℹ️ Hakkında</h3>
+    <p>SRUTHX Roblox sunucusu, eğlenceli ve aktif bir topluluk sunar. Herkes davetlidir!</p>
+  </div>
 
-<div class="card">
-<h3>ℹ️ Hakkında</h3>
-<p>SRUTHX Roblox sunucusu eğlenceli ve aktif bir topluluk sunar. Herkes davetlidir!</p>
+  <div class="card">
+    <h3>💬 Discord</h3>
+    <p>Topluluğumuza katıl ve arkadaşlarınla sohbet et!</p>
+    <a href="https://discord.gg/cJAV3DpEMy" class="button" style="margin-top:15px; padding:10px 20px; font-size:16px;">JOIN DISCORD</a>
+  </div>
+
+  <div class="card">
+    <h3>🔥 Aktif</h3>
+    <p>Her gün aktif oyuncular ve oyunlar!</p>
+  </div>
 </div>
 
-<div class="card">
-<h3>💬 Discord</h3>
-<p>Topluluğumuza katıl ve arkadaşlarınla sohbet et!</p>
-
-<a href="https://discord.gg/cJAV3DpEMy" class="button" style="margin-top:15px;padding:8px 20px;font-size:16px;">
-JOIN DISCORD
-</a>
-
-</div>
-
-<div class="card">
-<h3>🔥 Aktif</h3>
-<p>Her gün aktif oyuncular ve oyunlar!</p>
-</div>
-
-</div>
+<footer>© SRUTHX Community</footer>
 
 </body>
 </html>
